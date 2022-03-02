@@ -3,7 +3,7 @@ import pygame
 pygame.init()
 clock = pygame.time.Clock()
 
-
+# Unfinished Code
 #Cores
 preto = (0, 0, 0)
 amarelo = (255, 255, 0)
