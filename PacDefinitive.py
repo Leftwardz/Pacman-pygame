@@ -9,6 +9,7 @@ preto = (0, 0, 0)
 amarelo = (255, 255, 0)
 vermelho = (255, 0, 0)
 azul = (0, 0, 255)
+laranja = (255, 165, 0)
 
 velocidade = 2
 
@@ -55,7 +56,7 @@ class Cenario:
             half = self.tamanho // 2
             cor = preto
             if coluna == 2:
-                cor = azul
+                cor = laranja
             pygame.draw.rect(tela, cor, (x, y, self.tamanho, self.tamanho), 0)
             if coluna == 1:
                 pygame.draw.circle(tela, amarelo, (x + half, y + half),
@@ -66,10 +67,9 @@ class Cenario:
             self.pintar_linha(tela, numero_linha, linha)
 
 
-
-
 class Pacman:
     def __init__(self):
+        self.centro = [255, 255]
         self.centro_x = 255
         self.centro_y = 255
         self.raio = 9
@@ -78,82 +78,93 @@ class Pacman:
         self.direcao = 'direita'
         self.intencao_x = 0
         self.intencao_y = 0
+        self.boca = True
 
+    def verificar_pintura(self, tempo):
+        global agora
+        if tempo - agora > 150:
+            agora = pygame.time.get_ticks()
+            self.boca = not self.boca
 
-    def pintar_boca(self, tela):
-        #Esquerda
-        if self.direcao == 'esquerda':
-
+    def pintar(self, tela, tempo):
+        self.verificar_pintura(tempo)
+        if self.boca:
             pygame.draw.circle(tela, amarelo, (self.centro_x, self.centro_y), self.raio, 0)
 
-            # Olho Esquerdo
-            olho_x = int(self.centro_x - self.raio / 3)
-            olho_y = int(self.centro_y - self.raio / 2)
-            olho_raio = int(self.raio / 5)
+        else:
+            #Esquerda
+            if self.direcao == 'esquerda':
 
-            pygame.draw.circle(tela, preto, (olho_x, olho_y), olho_raio, 0)
+                pygame.draw.circle(tela, amarelo, (self.centro_x, self.centro_y), self.raio, 0)
 
-            # Boca Esquerda
-            canto_boca = [self.centro_x, self.centro_y]
-            superior_boca = [self.centro_x - self.raio, self.centro_y - self.raio // 2]
-            inferior_boca = [self.centro_x - self.raio, self.centro_y + self.raio // 2]
-            pontos = [canto_boca, superior_boca, inferior_boca]
-            pygame.draw.polygon(tela, preto, pontos, 0)
+                # Olho Esquerdo
+                olho_x = int(self.centro_x - self.raio / 3)
+                olho_y = int(self.centro_y - self.raio / 2)
+                olho_raio = int(self.raio / 5)
 
-        # Direita
-        elif self.direcao == 'direita':
+                pygame.draw.circle(tela, preto, (olho_x, olho_y), olho_raio, 0)
 
-            pygame.draw.circle(tela, amarelo, (self.centro_x, self.centro_y), self.raio, 0)
+                # Boca Esquerda
+                canto_boca = [self.centro_x, self.centro_y]
+                superior_boca = [self.centro_x - self.raio, self.centro_y - self.raio // 2]
+                inferior_boca = [self.centro_x - self.raio, self.centro_y + self.raio // 2]
+                pontos = [canto_boca, superior_boca, inferior_boca]
+                pygame.draw.polygon(tela, preto, pontos, 0)
 
-            #Olho Direito
-            olho_x = int(self.centro_x + self.raio / 3)
-            olho_y = int(self.centro_y - self.raio / 2)
-            olho_raio = int(self.raio / 5)
+            # Direita
+            elif self.direcao == 'direita':
 
-            pygame.draw.circle(tela, preto,(olho_x, olho_y), olho_raio, 0)
+                pygame.draw.circle(tela, amarelo, (self.centro_x, self.centro_y), self.raio, 0)
 
-            #Boca Direito
-            canto_boca = [self.centro_x, self.centro_y]
-            superior_boca = [self.centro_x + self.raio, self.centro_y - self.raio // 2 ]
-            inferior_boca = [self.centro_x + self.raio, self.centro_y + self.raio // 2 ]
-            pontos = [canto_boca, superior_boca, inferior_boca]
-            pygame.draw.polygon(tela, preto, pontos, 0)
+                #Olho Direito
+                olho_x = int(self.centro_x + self.raio / 3)
+                olho_y = int(self.centro_y - self.raio / 2)
+                olho_raio = int(self.raio / 5)
 
-        # Cima
-        elif self.direcao == 'cima':
-            pygame.draw.circle(tela, amarelo, (self.centro_x, self.centro_y), self.raio, 0)
+                pygame.draw.circle(tela, preto,(olho_x, olho_y), olho_raio, 0)
 
-            # Olho Cima
-            olho_y = int(self.centro_y - self.raio / 3)
-            olho_x = int(self.centro_x - self.raio / 2)
-            olho_raio = int(self.raio / 5)
+                #Boca Direito
+                canto_boca = [self.centro_x, self.centro_y]
+                superior_boca = [self.centro_x + self.raio, self.centro_y - self.raio // 2 ]
+                inferior_boca = [self.centro_x + self.raio, self.centro_y + self.raio // 2 ]
+                pontos = [canto_boca, superior_boca, inferior_boca]
+                pygame.draw.polygon(tela, preto, pontos, 0)
 
-            pygame.draw.circle(tela, preto, (olho_x, olho_y), olho_raio, 0)
+            # Cima
+            elif self.direcao == 'cima':
+                pygame.draw.circle(tela, amarelo, (self.centro_x, self.centro_y), self.raio, 0)
 
-            # Boca Cima
-            canto_boca = [self.centro_x, self.centro_y]
-            superior_boca = [self.centro_x - self.raio// 2, self.centro_y - self.raio]
-            inferior_boca = [self.centro_x + self.raio// 2, self.centro_y - self.raio]
-            pontos = [canto_boca, superior_boca, inferior_boca]
-            pygame.draw.polygon(tela, preto, pontos, 0)
+                # Olho Cima
+                olho_y = int(self.centro_y - self.raio / 3)
+                olho_x = int(self.centro_x - self.raio / 2)
+                olho_raio = int(self.raio / 5)
 
-        elif self.direcao == 'baixo':
-            # Baixo
-            pygame.draw.circle(tela, amarelo, (self.centro_x, self.centro_y), self.raio, 0)
+                pygame.draw.circle(tela, preto, (olho_x, olho_y), olho_raio, 0)
 
-            # Olho Baixo
-            olho_y = int(self.centro_y + self.raio / 3)
-            olho_x = int(self.centro_x + self.raio / 2)
-            olho_raio = int(self.raio / 5)
+                # Boca Cima
+                canto_boca = [self.centro_x, self.centro_y]
+                superior_boca = [self.centro_x - self.raio// 2, self.centro_y - self.raio]
+                inferior_boca = [self.centro_x + self.raio// 2, self.centro_y - self.raio]
+                pontos = [canto_boca, superior_boca, inferior_boca]
+                pygame.draw.polygon(tela, preto, pontos, 0)
 
-            pygame.draw.circle(tela, preto, (olho_x, olho_y), olho_raio, 0)
+            elif self.direcao == 'baixo':
+                # Baixo
+                pygame.draw.circle(tela, amarelo, (self.centro_x, self.centro_y), self.raio, 0)
 
-            # Boca Baixo
-            canto_boca = [self.centro_x, self.centro_y]
-            superior_boca = [self.centro_x + self.raio // 2, self.centro_y + self.raio]
-            inferior_boca = [self.centro_x - self.raio // 2, self.centro_y + self.raio]
-            pontos = [canto_boca, superior_boca, inferior_boca]
-            pygame.draw.polygon(tela, preto, pontos, 0)
+                # Olho Baixo
+                olho_y = int(self.centro_y + self.raio / 3)
+                olho_x = int(self.centro_x + self.raio / 2)
+                olho_raio = int(self.raio / 5)
+
+                pygame.draw.circle(tela, preto, (olho_x, olho_y), olho_raio, 0)
+
+                # Boca Baixo
+                canto_boca = [self.centro_x, self.centro_y]
+                superior_boca = [self.centro_x + self.raio // 2, self.centro_y + self.raio]
+                inferior_boca = [self.centro_x - self.raio // 2, self.centro_y + self.raio]
+                pontos = [canto_boca, superior_boca, inferior_boca]
+                pygame.draw.polygon(tela, preto, pontos, 0)
 
     def processar_regras(self):
         self.centro_x += self.vel_x
@@ -185,17 +196,18 @@ class Pacman:
 tela = pygame.display.set_mode((560, 580))
 pacman = Pacman()
 cenario = Cenario(20, pacman)
+agora = 0
 
 while True:
-
     # Regras
     clock.tick(60)
     pacman.processar_regras()
+    tempo = pygame.time.get_ticks()
 
     # Pintar a tela
     tela.fill(preto)
     cenario.pintar(tela)
-    pacman.pintar_boca(tela)
+    pacman.pintar(tela, tempo)
     pygame.display.update()
 
 
